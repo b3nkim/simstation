@@ -1,6 +1,5 @@
 package simstation;
 
-import java.util.Timer;
 import java.util.*;
 import mvc.*;
 
@@ -8,7 +7,12 @@ public class Simulation extends Model {
 	
 	private Timer timer;
 	private int clock;
-	private List<Agent> agents = new ArrayList<Agent>();
+	private List<Agent> agents;
+	
+	public Simulation() {
+		super();
+		agents = new LinkedList<Agent>();
+	}
 
 	public void start() {
 		populate();
@@ -39,7 +43,7 @@ public class Simulation extends Model {
 		int startIndex = agents.indexOf(a);
 		int currentIndex = startIndex;
 		int count = agents.size();
-		Random random = new Random();
+		Random random = Utilities.rng;
 
 		while (count > 0) {
 			int index = (currentIndex + random.nextInt(agents.size())) % agents.size();
@@ -48,7 +52,7 @@ public class Simulation extends Model {
 			}
 			Agent neighbor = agents.get(index);
 
-			if (neighbor != a && a.distance(neighbor) <= radius) {
+			if (neighbor != a && a.getDistance(neighbor) <= radius) {
 				return neighbor;
 			}
 			currentIndex = index;
