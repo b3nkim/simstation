@@ -5,7 +5,7 @@ import java.io.Serializable;
 public abstract class Agent implements Serializable, Runnable {
 
 	protected String name;
-	protected Thread myThread;
+	transient protected Thread myThread;
 	private int xc, yc;
 	private boolean suspended, stopped;
 	protected Simulation world; // TODO

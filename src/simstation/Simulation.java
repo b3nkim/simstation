@@ -5,7 +5,7 @@ import mvc.*;
 
 public class Simulation extends Model {
 	
-	private Timer timer;
+	transient private Timer timer; // timers aren't serializable
 	private int clock;
 	private List<Agent> agents;
 	
