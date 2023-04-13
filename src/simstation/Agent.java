@@ -2,7 +2,7 @@ package simstation;
 
 import java.io.Serializable;
 
-abstract class Agent implements Serializable, Runnable {
+public abstract class Agent implements Serializable, Runnable {
 
 	protected String name;
 	protected Thread myThread;
@@ -51,7 +51,6 @@ abstract class Agent implements Serializable, Runnable {
 			// manager.println(e.getMessage());
 		}
 	}
-
 
 	public void run() {
 		myThread = Thread.currentThread();
