@@ -79,6 +79,8 @@ public class Simulation extends Model {
 	public List<Agent> getAgents() {
 		return this.agents;
 	}
+
+	public void addAgent(Agent a) { this.agents.add(a); }
 	private class ClockUpdater extends TimerTask {
 		public void run() {
 			clock++;

@@ -2,6 +2,8 @@ package simstation;
 
 import java.io.Serializable;
 
+import static java.lang.Float.SIZE;
+
 public abstract class Agent implements Serializable, Runnable {
 
 	protected String name;
@@ -81,5 +83,36 @@ public abstract class Agent implements Serializable, Runnable {
 		int nxc = neighbor.getXc();
 		int nyc = neighbor.getYc();
 		return Math.sqrt(Math.pow((xc - nxc), 2) + Math.pow((yc - nyc), 2));
+	}
+
+	public void move(int dist) {
+		int dir = (int)(Math.random() * 4);
+		if (dir == 0) {
+			xc -= dist;
+			if (xc < 0) {
+				xc %= SIZE;
+			}
+		}
+
+		if (dir == 1) {
+			yc -= dist;
+			if (yc < 0) {
+				yc %= SIZE;
+			}
+		}
+
+		if (dir == 2) {
+			xc += dist;
+			if (xc < SIZE) {
+				xc %= SIZE;
+			}
+		}
+
+		if (dir == 3) {
+			yc += dist;
+			if (yc < SIZE) {
+				yc %= SIZE;
+			}
+		}
 	}
 }
