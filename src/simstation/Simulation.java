@@ -66,6 +66,10 @@ public class Simulation extends Model {
 		// It's called by start and populates the simulation
 	}
 
+	public int getClock() {
+		return clock;
+	}
+
 	private void startTimer() {
 		timer = new Timer();
 		timer.scheduleAtFixedRate(new ClockUpdater(), 1000, 1000);
