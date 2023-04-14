@@ -4,11 +4,11 @@ import java.util.*;
 import mvc.*;
 
 public class Simulation extends Model {
-	
+
 	transient private Timer timer; // timers aren't serializable
 	private int clock;
 	private List<Agent> agents;
-	
+
 	public Simulation() {
 		super();
 		agents = new ArrayList<Agent>();
@@ -84,7 +84,11 @@ public class Simulation extends Model {
 		return this.agents;
 	}
 
-	public void addAgent(Agent a) { this.agents.add(a); }
+	public void addAgent(Agent a) {
+		agents.add(a);
+		a.setWorld(this);
+	}
+
 	private class ClockUpdater extends TimerTask {
 		public void run() {
 			clock++;

@@ -13,7 +13,7 @@ class DilemmaAgent extends Agent {
     public boolean played = false, remembered = true;
     public Boolean strategy;
 
-    public DilemmaAgent {
+    public DilemmaAgent() {
         super();
     }
 
