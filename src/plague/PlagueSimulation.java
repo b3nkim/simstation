@@ -3,20 +3,15 @@ package plague;
 
 import mvc.*;
 import simstation.*;
-
-
 import java.awt.*;
-
 
 class PlagueAgent extends Agent {
     private boolean infected;
-
 
     public PlagueAgent() {
         super();
         this.infected = false;
     }
-
 
     public void update() {
         if (infected) {
@@ -36,28 +31,23 @@ class PlagueAgent extends Agent {
         move(Utilities.rng.nextInt(10) + 1);
     }
 
-
     public Color getColor() {
         return (infected) ? Color.RED : Color.GREEN;
     }
 
-
     public void setInfected(boolean infected) {
         this.infected = infected;
     }
-
 
     public boolean isInfected() {
         return infected;
     }
 }
 
-
 class PlagueFactory extends SimStationFactory {
     public Model makeModel() {
         return new PlagueSimulation();
     }
-
 
     public View makeView(Model model) {
         return new PlagueView((PlagueSimulation) model);
@@ -67,12 +57,10 @@ class PlagueFactory extends SimStationFactory {
     }
 }
 
-
 class PlagueView extends SimulationView {
     public PlagueView(PlagueSimulation m) {
         super(m);
     }
-
 
     @Override
     public void paintComponent(Graphics gc) {
@@ -91,10 +79,8 @@ class PlagueView extends SimulationView {
 }
 public class PlagueSimulation extends Simulation {
 
-
     public static int VIRULENCE = 50; // % chance of infection
     public static int RESISTANCE = 2; // % chance of resisting infection
-
 
     public void populate() {
         for (int i = 0; i < 50; i++) {
@@ -131,6 +117,3 @@ public class PlagueSimulation extends Simulation {
         panel.display();
     }
 }
-
-
-
