@@ -37,6 +37,7 @@ public class Simulation extends Model {
 		for (Agent agent : agents) {
 			agent.stop();
 		}
+		agents.clear();
 	}
 
 	public Agent getNeighbor(Agent a, double radius) {

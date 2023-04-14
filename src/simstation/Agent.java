@@ -83,56 +83,42 @@ public abstract class Agent implements Serializable, Runnable {
 
 	public abstract void update();
 
-	public void move(int steps) {
+	public synchronized void move(int steps) {
 		for (int i = 0; i < steps; i++) {
 			switch (heading) {
 				case EAST:
 					xc++;
-					if (xc >= SIZE - 1)
-						heading = Heading.WEST;
 					break;
 				case NORTH:
 					yc--;
-					if (yc <= 0)
-						heading = Heading.SOUTH;
 					break;
 				case NORTHEAST:
 					xc++;
 					yc--;
-					if (xc >= SIZE - 1 || yc <= 0)
-						heading = Heading.SOUTHWEST;
 					break;
 				case NORTHWEST:
 					xc--;
 					yc--;
-					if (xc <= 0 || yc <= 0)
-						heading = Heading.SOUTHEAST;
 					break;
 				case SOUTH:
 					yc++;
-					if (yc >= SIZE - 1)
-						heading = Heading.NORTH;
 					break;
 				case SOUTHEAST:
 					xc++;
 					yc++;
-					if (xc >= SIZE - 1 || yc >= SIZE - 1)
-						heading = Heading.NORTHWEST;
 					break;
 				case SOUTHWEST:
 					xc--;
 					yc++;
-					if (xc <= 0 || yc >= SIZE - 1)
-						heading = Heading.NORTHEAST;
 					break;
 				case WEST:
 					xc--;
-					if (xc <= 0)
-						heading = Heading.WEST;
 					break;
 				default:
 					break;
 			}
+			if (xc <= 0 || xc >= SIZE - 1 || yc <= 0 || yc >= SIZE - 1)
+				heading = Heading.random();
 			world.changed();
 		}
 	}
