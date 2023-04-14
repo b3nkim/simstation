@@ -11,6 +11,6 @@ public class StatsCommand extends Command {
 	@Override
 	public void execute() throws Exception {
 		Simulation simulation = (Simulation)this.model;
-		simulation.stats();
+//		simulation.stats();
 	}
 }

@@ -1,8 +1,7 @@
 package simstation;
 
 import java.io.Serializable;
-
-import static java.lang.Float.SIZE;
+import mvc.*;
 
 public abstract class Agent implements Serializable, Runnable {
 
@@ -10,29 +9,49 @@ public abstract class Agent implements Serializable, Runnable {
 	transient protected Thread myThread;
 	private int xc, yc;
 	private boolean suspended, stopped;
-	protected Simulation world; // TODO
+	protected Simulation world;
+	protected Heading heading;
+	
+	public Agent() {
+		this.name = null;
+		suspended = false;
+		stopped = false;
+		myThread = null;
+		heading = Heading.random();
+	}
 
 	public Agent(String name) {
 		this.name = name;
 		suspended = false;
 		stopped = false;
 		myThread = null;
+		heading = Heading.random();
 	}
-
-	public void setWorld(Simulation world) { this.world = world; }
-	public String getName() { return name; }
-	public synchronized String toString() {
-		String result = name;
-		if (stopped) result += " (stopped)";
-		else if (suspended) result += " (suspended)";
-		else result += " (running)";
-		return result;
+	
+	public void onStart() {}
+	public void onInterrupted() {}
+	public void onExit() {}
+	
+	public void run() {
+		myThread = Thread.currentThread();
+		while (!isStopped()) {
+			try {
+				update();
+				Thread.sleep(20);
+				checkSuspended();
+			} catch(InterruptedException e) {
+				// manager.println(e.getMessage());
+			}
+		}
+		// manager.stdout.println(name + " stopped");
 	}
+	
 	// thread stuff:
+	public synchronized void start() {
+
+	}
 	public synchronized void stop() { stopped = true; }
-	public synchronized boolean isStopped() { return stopped; }
 	public synchronized void suspend() { suspended = true; }
-	public synchronized boolean isSuspended() { return suspended;  }
 	public synchronized void resume() { notify(); }
 	// wait for me to die:
 	public synchronized void join() {
@@ -54,26 +73,45 @@ public abstract class Agent implements Serializable, Runnable {
 		}
 	}
 
-	public void run() {
-		myThread = Thread.currentThread();
-		while (!isStopped()) {
-			try {
-				update();
-				Thread.sleep(20);
-				checkSuspended();
-			} catch(InterruptedException e) {
-				// manager.println(e.getMessage());
-			}
+	public abstract void update();
+
+	public void move(int steps) {
+		// TODO boundary check
+		switch (heading) {
+			case EAST:
+				xc++;
+				break;
+			case NORTH:
+				yc--;
+				break;
+			case NORTHEAST:
+				xc++;
+				yc--;
+				break;
+			case NORTHWEST:
+				xc--;
+				yc--;
+				break;
+			case SOUTH:
+				yc++;
+				break;
+			case SOUTHEAST:
+				xc++;
+				yc++;
+				break;
+			case SOUTHWEST:
+				xc--;
+				yc++;
+				break;
+			case WEST:
+				xc--;
+				break;
+			default:
+				break;
 		}
-		// manager.stdout.println(name + " stopped");
 	}
 
-	public void start() {
-
-	}
-
-	public abstract void update();	
-
+	public Heading getHeading() { return heading; }
 	public int getXc() { return xc; }
 	public int getYc() { return yc; }
 	public double getDistance(Agent neighbor) {
@@ -84,35 +122,18 @@ public abstract class Agent implements Serializable, Runnable {
 		int nyc = neighbor.getYc();
 		return Math.sqrt(Math.pow((xc - nxc), 2) + Math.pow((yc - nyc), 2));
 	}
-
-	public void move(int dist) {
-		int dir = (int)(Math.random() * 4);
-		if (dir == 0) {
-			xc -= dist;
-			if (xc < 0) {
-				xc %= SIZE;
-			}
-		}
-
-		if (dir == 1) {
-			yc -= dist;
-			if (yc < 0) {
-				yc %= SIZE;
-			}
-		}
-
-		if (dir == 2) {
-			xc += dist;
-			if (xc < SIZE) {
-				xc %= SIZE;
-			}
-		}
-
-		if (dir == 3) {
-			yc += dist;
-			if (yc < SIZE) {
-				yc %= SIZE;
-			}
-		}
+	
+	public synchronized boolean isSuspended() { return suspended; }
+	public synchronized boolean isStopped() { return stopped; }
+	
+	public void setWorld(Simulation world) { this.world = world; }
+	public String getName() { return name; }
+	public synchronized String toString() {
+		String result = name;
+		if (stopped) result += " (stopped)";
+		else if (suspended) result += " (suspended)";
+		else result += " (running)";
+		return result;
 	}
+	
 }

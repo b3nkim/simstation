@@ -11,7 +11,7 @@ public class Simulation extends Model {
 	
 	public Simulation() {
 		super();
-		agents = new LinkedList<Agent>();
+		agents = new ArrayList<Agent>();
 	}
 
 	public void start() {
