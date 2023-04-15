@@ -4,6 +4,8 @@ package plague;
 import mvc.*;
 import simstation.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 class PlagueAgent extends Agent {
     private boolean infected;
@@ -83,18 +85,21 @@ public class PlagueSimulation extends Simulation {
 
     public static int VIRULENCE = 50; // % chance of infection
     public static int RESISTANCE = 2; // % chance of resisting infection
+    public static int INITIAL_INFECTED_AGENTS = 3;
 
     public void populate() {
         for (int i = 0; i < 50; i++) {
             PlagueAgent agent = new PlagueAgent();
-            if (i == 0) {
+            if (i < INITIAL_INFECTED_AGENTS) {
                 agent.setInfected(true);
             }
             addAgent(agent);
         }
     }
-    public String[] getStats() {
-        String[] stats = new String[3];
+
+    @Override
+    public List<String> getStatsArray() {
+        List<String> stats = new ArrayList<>();
         int totalAgents = getAgents().size();
         int infectedAgents = 0;
 
@@ -108,9 +113,9 @@ public class PlagueSimulation extends Simulation {
         }
         double infectionPercentage = (double) infectedAgents / totalAgents * 100;
 
-        stats[0] = "#agents = " + totalAgents;
-        stats[1] = "clock = " + getClock();
-        stats[2] = "% infected = " + infectionPercentage;
+        stats.add("#agents = " + totalAgents);
+        stats.add("clock = " + getClock());
+        stats.add("% infected = " + String.format("%.2f", infectionPercentage));
 
         return stats;
     }
