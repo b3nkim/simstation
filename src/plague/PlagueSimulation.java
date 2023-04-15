@@ -18,7 +18,6 @@ class PlagueAgent extends Agent {
             PlagueSimulation simulation = (PlagueSimulation) world;
             Agent neighbor = simulation.getNeighbor(this, 10);
 
-
             if (neighbor != null && neighbor instanceof PlagueAgent) {
                 PlagueAgent plagueNeighbor = (PlagueAgent) neighbor;
                 if (!plagueNeighbor.infected && Utilities.rng.nextInt(100) < PlagueSimulation.VIRULENCE) {
@@ -28,7 +27,10 @@ class PlagueAgent extends Agent {
                 }
             }
         }
-        move(Utilities.rng.nextInt(10) + 1);
+        int turn = Utilities.rng.nextInt(2) * 2 - 1;
+        int nextOrdinal = (heading.ordinal() + turn + 4) % 4;
+        heading = Heading.values()[nextOrdinal];
+        move(4);
     }
 
     public Color getColor() {
@@ -85,10 +87,12 @@ public class PlagueSimulation extends Simulation {
     public void populate() {
         for (int i = 0; i < 50; i++) {
             PlagueAgent agent = new PlagueAgent();
+            if (i == 0) {
+                agent.setInfected(true);
+            }
             addAgent(agent);
         }
     }
-
     public String[] getStats() {
         String[] stats = new String[3];
         int totalAgents = getAgents().size();
