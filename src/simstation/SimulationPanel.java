@@ -29,7 +29,7 @@ public class SimulationPanel extends AppPanel {
     public static void buttonAdder(JButton b, AppPanel p, JPanel c) {
         b.addActionListener(p);
         c.add(b);
-        b.setPreferredSize(new Dimension(50, 50));
+        b.setPreferredSize(new Dimension(100, 50));
     }
 
     public static void main(String args[]) {

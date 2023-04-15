@@ -19,18 +19,21 @@ public class Simulation extends Model {
 		for (Agent agent : agents) {
 			agent.start();
 		}
+		startTimer();
 	}
 
 	public void suspend () {
 		for (Agent agent : agents) {
 			agent.suspend();
 		}
+		stopTimer();
 	}
 
 	public void resume() {
 		for (Agent agent : agents) {
 			agent.resume();
 		}
+		startTimer();
 	}
 
 	public void stop() {
@@ -38,6 +41,21 @@ public class Simulation extends Model {
 			agent.stop();
 		}
 		agents.clear();
+		stopTimer();
+	}
+
+	public String stats() {
+		List<String> stats = getStatsArray();
+		StringBuilder statsString = new StringBuilder();
+		for (String stat : stats) {
+			statsString.append(stat).append("\n");
+		}
+		return statsString.toString();
+	}
+
+	public List<String> getStatsArray() {
+		List<String> stats = new ArrayList<>();
+		return stats;
 	}
 
 	public Agent getNeighbor(Agent a, double radius) {
