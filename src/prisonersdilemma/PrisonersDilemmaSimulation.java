@@ -3,15 +3,16 @@ package prisonersdilemma;
 import mvc.*;
 import simstation.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 class Prisoner extends Agent {
 
     Prisoner neighbor;
     public int fitness = 0;
     public boolean cheated = false;
+    public boolean played = false;
     public Strategy strategy;
 
     public Prisoner() {
@@ -19,7 +20,8 @@ class Prisoner extends Agent {
     }
 
     public void update() {
-        int steps = Utilities.rng.nextInt(10) + 1;
+        int steps = (Utilities.rng.nextInt(10) + 1);
+        played = false;
         move(steps);
         int radius = 0;
         while (this.neighbor == null) {
@@ -27,9 +29,13 @@ class Prisoner extends Agent {
             this.neighbor = (Prisoner) world.getNeighbor(this, radius);
         }
 
-        play(this, this.neighbor); //they play each other twice, but w/e
+        play(this, this.neighbor);
     }
     public void play(Prisoner a, Prisoner b) {
+        if (a.played == true || b.played == true) {
+            return;
+        }
+
         if (a.strategy.Cooperate() == true && b.strategy.Cooperate() == true) {
             a.fitness += 3;
             b.fitness += 3;
@@ -55,6 +61,9 @@ class Prisoner extends Agent {
             a.cheated = false;
             b.cheated = false;
         }
+
+        a.played = true;
+        b.played = true;
     }
 }
 
@@ -66,6 +75,8 @@ abstract class Strategy {
     }
 
     public abstract boolean Cooperate();
+
+    public abstract Color getColor();
 }
 
 class Cooperate extends Strategy {
@@ -77,6 +88,8 @@ class Cooperate extends Strategy {
     public boolean Cooperate() {
         return true;
     }
+
+    public Color getColor() { return Color.GREEN; }
 }
 
 class RandomlyCooperate extends Strategy {
@@ -90,6 +103,8 @@ class RandomlyCooperate extends Strategy {
         if (rand == 0) return true;
         return false;
     }
+
+    public Color getColor() { return Color.BLUE; }
 }
 
 class Cheat extends Strategy {
@@ -101,6 +116,8 @@ class Cheat extends Strategy {
     public boolean Cooperate() {
         return false;
     }
+
+    public Color getColor() { return Color.RED; }
 }
 
 class Tit4Tat extends Strategy {
@@ -112,6 +129,8 @@ class Tit4Tat extends Strategy {
         if (myPrisoner.cheated == true) return false;
         return true;
     }
+
+    public Color getColor() { return Color.YELLOW; }
 }
 
 class PrisonersDilemmaFactory extends SimStationFactory {
@@ -119,11 +138,34 @@ class PrisonersDilemmaFactory extends SimStationFactory {
         return new PrisonersDilemmaSimulation();
     }
 
+    public View makeView(Model model) {
+        return new PrisonersDilemmaView((PrisonersDilemmaSimulation) model);
+    }
     public String getTitle() {
         return "Prisoners Dilemma";
     }
 }
 
+class PrisonersDilemmaView extends SimulationView {
+    public PrisonersDilemmaView(PrisonersDilemmaSimulation m) {
+        super(m);
+    }
+
+    @Override
+    public void paintComponent(Graphics gc) {
+        super.paintComponent(gc);
+        Color oldColor = gc.getColor();
+        PrisonersDilemmaSimulation simulation = (PrisonersDilemmaSimulation) this.model;
+        for (Agent agent : simulation.getAgents()) {
+            if (agent instanceof Prisoner) {
+                Prisoner prisoner = (Prisoner) agent;
+                gc.setColor(prisoner.strategy.getColor());
+                gc.fillOval(prisoner.getXc(), prisoner.getYc(), 10, 10);
+            }
+        }
+        gc.setColor(oldColor);
+    }
+}
 public class PrisonersDilemmaSimulation extends Simulation {
 
     static final int POPULATION = 10;
@@ -198,10 +240,10 @@ public class PrisonersDilemmaSimulation extends Simulation {
             }
         }
 
-        stats.add("Cooperate: " + (double)totalfitness[0]/totalagents[0]);
-        stats.add("Randomly Cooperate: " + (double)totalfitness[1]/totalagents[1]);
-        stats.add("Cheat: " + (double)totalfitness[2]/totalagents[2]);
-        stats.add("Tit4Tat: " + (double)totalfitness[3]/totalagents[3]);
+        stats.add("Cooperate: " + totalfitness[0]/(double)totalagents[0]);
+        stats.add("Randomly Cooperate: " + totalfitness[1]/(double)totalagents[1]);
+        stats.add("Cheat: " + totalfitness[2]/(double)totalagents[2]);
+        stats.add("Tit4Tat: " + totalfitness[3]/(double)totalagents[3]);
 
         return stats;
     }
