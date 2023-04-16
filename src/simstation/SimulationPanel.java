@@ -1,6 +1,11 @@
 package simstation;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import javax.swing.*;
 
 import mvc.*;
@@ -30,6 +35,39 @@ public class SimulationPanel extends AppPanel {
         b.addActionListener(p);
         c.add(b);
         b.setPreferredSize(new Dimension(100, 50));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        String actionCommand = ae.getActionCommand();
+        Simulation simulation = (Simulation) model;
+
+        try {
+            switch (actionCommand) {
+                case "New": {
+                    for (Agent agent : Simulation.getAgents()){
+                        agent.start();
+                    }
+                }
+
+                case "Save": {
+                    if (simulation.running == true) {
+                        Utilities.error("Cannot save a simulation while threads are still active!");
+                        return;
+                    }
+                }
+
+                case "Open": {
+                    for (Agent agent : Simulation.getAgents()){
+                        agent.start();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            handleException(e);
+        }
+
+        super.actionPerformed(ae);
     }
 
     public static void main(String args[]) {

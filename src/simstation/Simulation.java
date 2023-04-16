@@ -7,11 +7,13 @@ public class Simulation extends Model {
 
 	transient private Timer timer; // timers aren't serializable
 	private int clock;
-	private List<Agent> agents;
+	private static List<Agent> agents;
 
+	public boolean running;
 	public Simulation() {
 		super();
 		agents = new ArrayList<Agent>();
+		this.running = false;
 	}
 
 	public void start() {
@@ -23,7 +25,7 @@ public class Simulation extends Model {
 		startTimer();
 	}
 
-	public void suspend () {
+	public void suspend() {
 		for (Agent agent : agents) {
 			agent.suspend();
 		}
@@ -92,16 +94,18 @@ public class Simulation extends Model {
 
 	private void startTimer() {
 		timer = new Timer();
+		this.running = true;
 		timer.scheduleAtFixedRate(new ClockUpdater(), 1000, 1000);
 	}
 
 	private void stopTimer() {
+		this.running = false;
 		timer.cancel();
 		timer.purge();
 	}
 
-	public List<Agent> getAgents() {
-		return this.agents;
+	public static List<Agent> getAgents() {
+		return agents;
 	}
 
 	public void addAgent(Agent a) {
