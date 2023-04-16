@@ -4,6 +4,7 @@ import mvc.*;
 import simstation.*;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,7 @@ class Prisoner extends Agent {
 
         play(this, this.neighbor);
     }
+
     public void play(Prisoner a, Prisoner b) {
         if (a.played == true || b.played == true) {
             return;
@@ -67,7 +69,7 @@ class Prisoner extends Agent {
     }
 }
 
-abstract class Strategy {
+abstract class Strategy implements Serializable {
     protected Prisoner myPrisoner;
 
     public Strategy(Prisoner prisoner) {
@@ -89,7 +91,9 @@ class Cooperate extends Strategy {
         return true;
     }
 
-    public Color getColor() { return Color.GREEN; }
+    public Color getColor() {
+        return Color.GREEN;
+    }
 }
 
 class RandomlyCooperate extends Strategy {
@@ -99,12 +103,14 @@ class RandomlyCooperate extends Strategy {
     }
 
     public boolean Cooperate() {
-        int rand = (int)(Math.random() * 2);
+        int rand = (int) (Math.random() * 2);
         if (rand == 0) return true;
         return false;
     }
 
-    public Color getColor() { return Color.BLUE; }
+    public Color getColor() {
+        return Color.BLUE;
+    }
 }
 
 class Cheat extends Strategy {
@@ -117,7 +123,9 @@ class Cheat extends Strategy {
         return false;
     }
 
-    public Color getColor() { return Color.RED; }
+    public Color getColor() {
+        return Color.RED;
+    }
 }
 
 class Tit4Tat extends Strategy {
@@ -130,7 +138,9 @@ class Tit4Tat extends Strategy {
         return true;
     }
 
-    public Color getColor() { return Color.YELLOW; }
+    public Color getColor() {
+        return Color.YELLOW;
+    }
 }
 
 class PrisonersDilemmaFactory extends SimStationFactory {
@@ -141,6 +151,7 @@ class PrisonersDilemmaFactory extends SimStationFactory {
     public View makeView(Model model) {
         return new PrisonersDilemmaView((PrisonersDilemmaSimulation) model);
     }
+
     public String getTitle() {
         return "Prisoners Dilemma";
     }
@@ -166,9 +177,11 @@ class PrisonersDilemmaView extends SimulationView {
         gc.setColor(oldColor);
     }
 }
+
 public class PrisonersDilemmaSimulation extends Simulation {
 
     static final int POPULATION = 10;
+
     public void populateRandomly() {
         for (int i = 0; i < POPULATION; i++) {
             int rand = (int) (Math.random() * 4);
@@ -240,10 +253,10 @@ public class PrisonersDilemmaSimulation extends Simulation {
             }
         }
 
-        stats.add("Cooperate: " + totalfitness[0]/(double)totalagents[0]);
-        stats.add("Randomly Cooperate: " + totalfitness[1]/(double)totalagents[1]);
-        stats.add("Cheat: " + totalfitness[2]/(double)totalagents[2]);
-        stats.add("Tit4Tat: " + totalfitness[3]/(double)totalagents[3]);
+        stats.add("Cooperate: " + totalfitness[0] / (double) totalagents[0]);
+        stats.add("Randomly Cooperate: " + totalfitness[1] / (double) totalagents[1]);
+        stats.add("Cheat: " + totalfitness[2] / (double) totalagents[2]);
+        stats.add("Tit4Tat: " + totalfitness[3] / (double) totalagents[3]);
 
         return stats;
     }
