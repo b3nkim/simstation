@@ -7,7 +7,7 @@ public class Simulation extends Model {
 
 	transient private Timer timer; // timers aren't serializable
 	private int clock;
-	private static List<Agent> agents;
+	private List<Agent> agents;
 
 	public boolean running;
 	public Simulation() {
@@ -104,7 +104,7 @@ public class Simulation extends Model {
 		timer.purge();
 	}
 
-	public static List<Agent> getAgents() {
+	public List<Agent> getAgents() {
 		return agents;
 	}
 
