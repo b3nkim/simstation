@@ -88,37 +88,53 @@ public abstract class Agent implements Serializable, Runnable {
 			switch (heading) {
 				case EAST:
 					xc++;
+					if (xc >= SIZE - 10)
+						heading = Heading.random();
 					break;
 				case NORTH:
 					yc--;
+					if (yc <= 0)
+						heading = Heading.random();
 					break;
 				case NORTHEAST:
 					xc++;
 					yc--;
+					if (xc >= SIZE - 10 || yc <= 0)
+						heading = Heading.random();
 					break;
 				case NORTHWEST:
 					xc--;
 					yc--;
+					if (xc <= 0 || yc <= 0)
+						heading = Heading.random();
 					break;
 				case SOUTH:
 					yc++;
+					if (yc >= SIZE - 10)
+						heading = Heading.random();
 					break;
 				case SOUTHEAST:
 					xc++;
 					yc++;
+					if (xc >= SIZE - 10 || yc >= SIZE - 10)
+						heading = Heading.random();
 					break;
 				case SOUTHWEST:
 					xc--;
 					yc++;
+					if (xc <= 0 || yc >= SIZE - 10)
+						heading = Heading.random();
 					break;
 				case WEST:
 					xc--;
+					if (xc <= 0)
+						heading = Heading.random();
 					break;
 				default:
 					break;
 			}
-			if (xc <= 0 || xc >= SIZE - 1 || yc <= 0 || yc >= SIZE - 1)
-				heading = Heading.random();
+//			if (xc <= 0 || xc >= SIZE - 10 || yc <= 0 || yc >= SIZE - 10)
+//				heading = Heading.random();
 			world.changed();
 		}
 	}

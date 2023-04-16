@@ -1,5 +1,7 @@
 package flocking;
 
+import java.util.*;
+
 import mvc.*;
 import simstation.*;
 
@@ -19,8 +21,8 @@ class Bird extends Agent {
 		if (partner != null) {
 			speed = partner.getSpeed();
 			heading = partner.getHeading();
-			move(speed);
 		}
+		move(speed);
 	}
 
 	public int getSpeed() {
@@ -42,18 +44,19 @@ public class FlockingSimulation extends Simulation {
 			addAgent(new Bird());
 		}
 	}
-
-	public String[] getStats() {
-		String[] stats = new String[5];
+	
+	@Override
+	public List<String> getStatsArray() {
+		List<String> list = new ArrayList<String>();
 		int[] speeds = new int[5];
 		for (Agent agent : getAgents()) {
 			Bird bird = (Bird) agent;
 			speeds[bird.getSpeed() - 1]++;
 		}
 		for (int i = 0; i < 5; i++) {
-			stats[i] = "#birds @ speed " + (i+1) + " = " + speeds[i];
+			list.add("#birds @ speed " + (i+1) + " = " + speeds[i]);
 		}
-		return stats;
+		return list;
 	}
 	
 	public static void main(String[] args) {
