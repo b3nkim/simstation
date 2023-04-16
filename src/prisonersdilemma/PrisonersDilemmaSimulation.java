@@ -191,8 +191,9 @@ class PrisonersDilemmaFactory extends SimStationFactory {
 
 public class PrisonersDilemmaSimulation extends Simulation {
 
+    static final int POPULATION = 15;
     public void populate() {
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < POPULATION; i++) {
             int rand = (int) (Math.random() * 4);
             Agent toAdd = null;
             switch (rand) {
@@ -217,6 +218,42 @@ public class PrisonersDilemmaSimulation extends Simulation {
                 addAgent(toAdd);
             }
         }
+    }
+
+    public String[] getStats() {
+        String[] stats = new String[4];
+        int[] totalfitness = new int[4];
+        int[] totalagents = new int[4];
+        List<Agent> agents = getAgents();
+        for (int i = 0; i < agents.size(); i++) {
+            DilemmaAgent agent = (DilemmaAgent) agents.get(i);
+            if (agent instanceof Cooperate) {
+                totalagents[0]++;
+                totalfitness[0] += agent.fitness;
+            }
+
+            if (agent instanceof RandomlyCooperate) {
+                totalagents[1]++;
+                totalfitness[1] += agent.fitness;
+            }
+
+            if (agent instanceof Cheat) {
+                totalagents[2]++;
+                totalfitness[2] += agent.fitness;
+            }
+
+            if (agent instanceof TitForTat) {
+                totalagents[3]++;
+                totalfitness[3] += agent.fitness;
+            }
+        }
+
+        stats[0] = "Cooperate: " + (double)totalfitness[0]/totalagents[0];
+        stats[1] = "Randomly Cooperate" + (double)totalfitness[1]/totalagents[1];
+        stats[2] = "Randomly Cooperate" + (double)totalfitness[2]/totalagents[2];
+        stats[3] = "Randomly Cooperate" + (double)totalfitness[3]/totalagents[3];
+
+        return stats;
     }
 
     public static void main(String[] args) {
