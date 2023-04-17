@@ -46,7 +46,12 @@ public class SimulationPanel extends AppPanel {
         try {
             switch (actionCommand) {
                 case "Save": {
-                    if (simulation.running == true) {
+                    if (simulation.getAgents() == null) {
+                        Utilities.error("There is no simulation to save!");
+                        return;
+                    }
+
+                    if (simulation.running || simulation.suspended) {
                         Utilities.error("Cannot save a simulation while threads are still active!");
                         return;
                     }
@@ -57,19 +62,6 @@ public class SimulationPanel extends AppPanel {
         }
 
         super.actionPerformed(ae);
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        Simulation simulation = (Simulation) model;
-        if (evt.getPropertyName() == "Open") {
-            for (Agent agent : simulation.getAgents()) {
-                agent.start();
-            }
-        }
-
-        notifyAll();
-        this.repaint();
     }
 
     public static void main(String args[]) {

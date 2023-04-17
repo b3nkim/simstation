@@ -9,11 +9,12 @@ public class Simulation extends Model {
 	private int clock;
 	private List<Agent> agents;
 
-	public boolean running;
+	public boolean running, suspended;
 	public Simulation() {
 		super();
 		agents = new ArrayList<Agent>();
 		this.running = false;
+		this.suspended = false;
 	}
 
 	public void start() {
@@ -29,6 +30,7 @@ public class Simulation extends Model {
 		for (Agent agent : agents) {
 			agent.suspend();
 		}
+		this.suspended = true;
 		stopTimer();
 	}
 
@@ -43,7 +45,6 @@ public class Simulation extends Model {
 		for (Agent agent : agents) {
 			agent.stop();
 		}
-		agents.clear();
 		stopTimer();
 	}
 
@@ -95,6 +96,7 @@ public class Simulation extends Model {
 	private void startTimer() {
 		timer = new Timer();
 		this.running = true;
+		this.suspended = false;
 		timer.scheduleAtFixedRate(new ClockUpdater(), 1000, 1000);
 	}
 
